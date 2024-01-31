@@ -49,6 +49,7 @@ const findUserByNameAndJob = (name, job) => {
 
 
 const addUser = (user) => {
+  user.id = generateId();
   users["users_list"].push(user);
   return user;
 };
@@ -61,6 +62,11 @@ const deleteUserById = (id) => {
   }
   return false; // Return false if user was not found
 };
+
+const generateId = () =>{
+  return Math.floor(Math.random() * 900) + 100;;
+}
+
 
 const findUserById = (id) =>
   users["users_list"].find((user) => user["id"] === id);
@@ -108,15 +114,15 @@ app.get("/users/:id", (req, res) => {
 
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
-  addUser(userToAdd);
-  res.send();
+  const addedUser = addUser(userToAdd);
+  res.status(201).send(addedUser);
 });
 
 app.delete("/users/:id", (req, res) => {
   const id = req.params.id;
   const wasDeleted = deleteUserById(id);
   if (wasDeleted) {
-    res.status(200).send(`User with id ${id} was deleted.`);
+    res.status(204).end();
   } else {
     res.status(404).send("User not found.");
   }

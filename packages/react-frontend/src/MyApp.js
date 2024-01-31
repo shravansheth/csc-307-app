@@ -7,19 +7,47 @@ import React, {useState, useEffect} from 'react';
 
 function MyApp() {
   const [characters, setCharacters] = useState([]);
+  // function removeOneCharacter(index) {
+  //   const updated = characters.filter((character, i) => {
+  //     return i !== index;
+  //   });
+  //   setCharacters(updated);
+  // }
   function removeOneCharacter(index) {
-    const updated = characters.filter((character, i) => {
-      return i !== index;
-    });
-    setCharacters(updated);
+    const userToDelete = characters[index];
+  
+    if (userToDelete && userToDelete.id) {
+      const deleteUrl = `http://localhost:8000/users/${userToDelete.id}`;
+  
+      fetch(deleteUrl, {method: 'DELETE'}) 
+        .then(response => {
+          if (response.status === 204) {
+            console.log(`User with id ${userToDelete.id} was deleted.`);
+            const updated = characters.filter((character, i) => {
+              return i !== index;
+            });
+            setCharacters(updated);
+          } else if (response.status === 404) {
+            console.error('User not found, could not delete.');
+          } else {
+            console.error('Unexpected error.');
+          }
+        })
+        .catch(error => console.error('Error:', error));
+    } else {
+      console.error('Invalid user data or missing ID.');
+    }
   }
 
-  function updateList(person) { 
+  function updateList(person) {
     postUser(person)
-      .then(() => setCharacters([...characters, person]))
+      .then((response) => response.json()) 
+      .then((addedUser) => {
+        setCharacters([...characters, addedUser]); 
+      })
       .catch((error) => {
         console.log(error);
-      })
+      });
   }
 
   function fetchUsers() {
