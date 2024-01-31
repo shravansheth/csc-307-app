@@ -22,7 +22,6 @@ function MyApp() {
       fetch(deleteUrl, {method: 'DELETE'}) 
         .then(response => {
           if (response.status === 204) {
-            console.log(`User with id ${userToDelete.id} was deleted.`);
             const updated = characters.filter((character, i) => {
               return i !== index;
             });
