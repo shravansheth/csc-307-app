@@ -1,5 +1,7 @@
 // index.js
 import express from "express";
+import cors from "cors";
+
 
 const app = express();
 const port = 8000;
@@ -64,9 +66,8 @@ const findUserById = (id) =>
   users["users_list"].find((user) => user["id"] === id);
 
 
+app.use(cors());
 app.use(express.json());
-
-
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -119,4 +120,4 @@ app.delete("/users/:id", (req, res) => {
   } else {
     res.status(404).send("User not found.");
   }
-}); 
+});
