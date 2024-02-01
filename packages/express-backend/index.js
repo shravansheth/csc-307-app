@@ -64,7 +64,7 @@ const deleteUserById = (id) => {
 };
 
 const generateId = () =>{
-  return Math.floor(Math.random() * 900) + 100;;
+  return String(Math.floor(Math.random() * 900) + 100);
 }
 
 
